@@ -492,10 +492,9 @@ DomElement.prototype = {
             }
         });
     }
-};
 
-// new 一个对象
-function $(selector) {
+    // new 一个对象
+};function $(selector) {
     return new DomElement(selector);
 }
 
@@ -531,6 +530,8 @@ var config = {
         return true; // 返回 true 即表示成功
         // return '校验失败' // 返回字符串即表示失败的提示信息
     },
+
+    colors: ['#000000', '#eeece0', '#1c487f', '#4d80bf', '#c24f4a', '#8baa4a', '#7b5ba1', '#46acc8', '#f9963b', '#ffffff', '#ff0000', '#00ff00', '#0000ff'],
 
     // 粘贴过滤样式，默认开启
     pasteFilterStyle: true,
@@ -616,6 +617,17 @@ var config = {
     // 是否上传七牛云，默认为 false
     qiniu: false
 
+    // 上传图片自定义提示方法
+    // customAlert: function (info) {
+    //     // 自定义上传提示
+    // },
+
+    // // 自定义上传图片
+    // customUploadImg: function (files, insert) {
+    //     // files 是 input 中选中的文件列表
+    //     // insert 是获取图片 url 后，插入到编辑器的方法
+    //     insert(imgUrl)
+    // }
 };
 
 /*
@@ -636,10 +648,9 @@ var UA = {
     isIE: function isIE() {
         return 'ActiveXObject' in window;
     }
-};
 
-// 遍历对象
-function objForEach(obj, fn) {
+    // 遍历对象
+};function objForEach(obj, fn) {
     var key = void 0,
         result = void 0;
     for (key in obj) {
@@ -1234,9 +1245,8 @@ Link.prototype = {
                         // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
                         return true;
                     }
-                }]
-            } // tab end
-            ] // tabs end
+                }] // tab end
+            }] // tabs end
         });
 
         // 显示 panel
@@ -1638,15 +1648,37 @@ function ForeColor(editor) {
     this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-pencil2"><i/></div>');
     this.type = 'droplist';
 
+    var config = editor.config || {};
+    var colors = config.colors || ['#000000', '#eeece0', '#1c487f', '#4d80bf', '#c24f4a', '#8baa4a', '#7b5ba1', '#46acc8', '#f9963b', '#ffffff'];
+
     // 当前是否 active 状态
     this._active = false;
-
+    var lists = [];
+    for (var i = 0, leng = colors.length; i < leng; i++) {
+        var tempJson = {};
+        var str = '<i style="color:' + colors[i] + ';" class="w-e-icon-pencil2"></i>';
+        tempJson.$elem = $(str);
+        tempJson.value = colors[i];
+        lists.push(tempJson);
+    }
     // 初始化 droplist
     this.droplist = new DropList(this, {
         width: 120,
         $title: $('<p>文字颜色</p>'),
         type: 'inline-block', // droplist 内容以 block 形式展示
-        list: [{ $elem: $('<i style="color:#000000;" class="w-e-icon-pencil2"></i>'), value: '#000000' }, { $elem: $('<i style="color:#eeece0;" class="w-e-icon-pencil2"></i>'), value: '#eeece0' }, { $elem: $('<i style="color:#1c487f;" class="w-e-icon-pencil2"></i>'), value: '#1c487f' }, { $elem: $('<i style="color:#4d80bf;" class="w-e-icon-pencil2"></i>'), value: '#4d80bf' }, { $elem: $('<i style="color:#c24f4a;" class="w-e-icon-pencil2"></i>'), value: '#c24f4a' }, { $elem: $('<i style="color:#8baa4a;" class="w-e-icon-pencil2"></i>'), value: '#8baa4a' }, { $elem: $('<i style="color:#7b5ba1;" class="w-e-icon-pencil2"></i>'), value: '#7b5ba1' }, { $elem: $('<i style="color:#46acc8;" class="w-e-icon-pencil2"></i>'), value: '#46acc8' }, { $elem: $('<i style="color:#f9963b;" class="w-e-icon-pencil2"></i>'), value: '#f9963b' }, { $elem: $('<i style="color:#ffffff;" class="w-e-icon-pencil2"></i>'), value: '#ffffff' }],
+        // list: [
+        //     { $elem: $('<i style="color:#000000;" class="w-e-icon-pencil2"></i>'), value: '#000000' },
+        //     { $elem: $('<i style="color:#eeece0;" class="w-e-icon-pencil2"></i>'), value: '#eeece0' },
+        //     { $elem: $('<i style="color:#1c487f;" class="w-e-icon-pencil2"></i>'), value: '#1c487f' },
+        //     { $elem: $('<i style="color:#4d80bf;" class="w-e-icon-pencil2"></i>'), value: '#4d80bf' },
+        //     { $elem: $('<i style="color:#c24f4a;" class="w-e-icon-pencil2"></i>'), value: '#c24f4a' },
+        //     { $elem: $('<i style="color:#8baa4a;" class="w-e-icon-pencil2"></i>'), value: '#8baa4a' },
+        //     { $elem: $('<i style="color:#7b5ba1;" class="w-e-icon-pencil2"></i>'), value: '#7b5ba1' },
+        //     { $elem: $('<i style="color:#46acc8;" class="w-e-icon-pencil2"></i>'), value: '#46acc8' },
+        //     { $elem: $('<i style="color:#f9963b;" class="w-e-icon-pencil2"></i>'), value: '#f9963b' },
+        //     { $elem: $('<i style="color:#ffffff;" class="w-e-icon-pencil2"></i>'), value: '#ffffff' }
+        // ],
+        list: lists,
         onClick: function onClick(value) {
             // 注意 this 是指向当前的 ForeColor 对象
             _this._command(value);
@@ -1675,16 +1707,40 @@ function BackColor(editor) {
     this.editor = editor;
     this.$elem = $('<div class="w-e-menu"><i class="w-e-icon-paint-brush"><i/></div>');
     this.type = 'droplist';
+    var config = editor.config || {};
+    var colors = config.colors || ['#000000', '#eeece0', '#1c487f', '#4d80bf', '#c24f4a', '#8baa4a', '#7b5ba1', '#46acc8', '#f9963b', '#ffffff'];
 
     // 当前是否 active 状态
     this._active = false;
-
+    var lists = [];
+    for (var i = 0, leng = colors.length; i < leng; i++) {
+        var tempJson = {};
+        var str = '<i style="color:' + colors[i] + ';" class="w-e-icon-paint-brush"></i>';
+        tempJson.$elem = $(str);
+        tempJson.value = colors[i];
+        lists.push(tempJson);
+    }
+    lists.push({
+        $elem: $('<i style="color:#000; font-style: normal">清除</i>'), value: 'rgba(0, 0, 0, 0)'
+    });
     // 初始化 droplist
     this.droplist = new DropList(this, {
         width: 120,
         $title: $('<p>背景色</p>'),
         type: 'inline-block', // droplist 内容以 block 形式展示
-        list: [{ $elem: $('<i style="color:#000000;" class="w-e-icon-paint-brush"></i>'), value: '#000000' }, { $elem: $('<i style="color:#eeece0;" class="w-e-icon-paint-brush"></i>'), value: '#eeece0' }, { $elem: $('<i style="color:#1c487f;" class="w-e-icon-paint-brush"></i>'), value: '#1c487f' }, { $elem: $('<i style="color:#4d80bf;" class="w-e-icon-paint-brush"></i>'), value: '#4d80bf' }, { $elem: $('<i style="color:#c24f4a;" class="w-e-icon-paint-brush"></i>'), value: '#c24f4a' }, { $elem: $('<i style="color:#8baa4a;" class="w-e-icon-paint-brush"></i>'), value: '#8baa4a' }, { $elem: $('<i style="color:#7b5ba1;" class="w-e-icon-paint-brush"></i>'), value: '#7b5ba1' }, { $elem: $('<i style="color:#46acc8;" class="w-e-icon-paint-brush"></i>'), value: '#46acc8' }, { $elem: $('<i style="color:#f9963b;" class="w-e-icon-paint-brush"></i>'), value: '#f9963b' }, { $elem: $('<i style="color:#ffffff;" class="w-e-icon-paint-brush"></i>'), value: '#ffffff' }],
+        // list: [
+        //     { $elem: $('<i style="color:#000000;" class="w-e-icon-paint-brush"></i>'), value: '#000000' },
+        //     { $elem: $('<i style="color:#eeece0;" class="w-e-icon-paint-brush"></i>'), value: '#eeece0' },
+        //     { $elem: $('<i style="color:#1c487f;" class="w-e-icon-paint-brush"></i>'), value: '#1c487f' },
+        //     { $elem: $('<i style="color:#4d80bf;" class="w-e-icon-paint-brush"></i>'), value: '#4d80bf' },
+        //     { $elem: $('<i style="color:#c24f4a;" class="w-e-icon-paint-brush"></i>'), value: '#c24f4a' },
+        //     { $elem: $('<i style="color:#8baa4a;" class="w-e-icon-paint-brush"></i>'), value: '#8baa4a' },
+        //     { $elem: $('<i style="color:#7b5ba1;" class="w-e-icon-paint-brush"></i>'), value: '#7b5ba1' },
+        //     { $elem: $('<i style="color:#46acc8;" class="w-e-icon-paint-brush"></i>'), value: '#46acc8' },
+        //     { $elem: $('<i style="color:#f9963b;" class="w-e-icon-paint-brush"></i>'), value: '#f9963b' },
+        //     { $elem: $('<i style="color:#ffffff;" class="w-e-icon-paint-brush"></i>'), value: '#ffffff' }
+        // ],
+        list: lists,
         onClick: function onClick(value) {
             // 注意 this 是指向当前的 BackColor 对象
             _this._command(value);
@@ -1851,9 +1907,8 @@ Code.prototype = {
                         // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
                         return true;
                     }
-                }]
-            } // first tab end
-            ] // tabs end
+                }] // first tab end
+            }] // tabs end
         }); // new Panel end
 
         // 显示 panel
@@ -1976,9 +2031,8 @@ Emoticon.prototype = {
                         // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
                         return true;
                     }
-                }]
-            } // second tab end
-            ] // tabs end
+                }] // second tab end
+            }] // tabs end
         });
 
         // 显示 panel
@@ -2056,9 +2110,8 @@ Table.prototype = {
                         // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
                         return true;
                     }
-                }]
-            } // first tab end
-            ] // tabs end
+                }] // first tab end
+            }] // tabs end
         }); // panel end
 
         // 展示 panel
@@ -2396,9 +2449,8 @@ Video.prototype = {
                         // 返回 true，表示该事件执行完之后，panel 要关闭。否则 panel 不会关闭
                         return true;
                     }
-                }]
-            } // first tab end
-            ] // tabs end
+                }] // first tab end
+            }] // tabs end
         }); // panel end
 
         // 显示 panel
@@ -2587,9 +2639,8 @@ Image.prototype = {
                     // 返回 true 表示函数执行结束之后关闭 panel
                     return true;
                 }
-            }]
-        } // second tab end
-        ]; // tabs end
+            }] // second tab end
+        }]; // tabs end
 
         // 判断 tabs 的显示
         var tabsConfigResult = [];

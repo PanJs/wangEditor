@@ -50,6 +50,22 @@ const config = {
         // return '校验失败' // 返回字符串即表示失败的提示信息
     },
 
+    colors: [
+        '#000000',
+        '#eeece0',
+        '#1c487f',
+        '#4d80bf',
+        '#c24f4a',
+        '#8baa4a',
+        '#7b5ba1',
+        '#46acc8',
+        '#f9963b',
+        '#ffffff',
+        '#ff0000',
+        '#00ff00',
+        '#0000ff'
+    ],
+
     // 粘贴过滤样式，默认开启
     pasteFilterStyle: true,
 

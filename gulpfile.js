@@ -8,7 +8,7 @@ const rename = require('gulp-rename')
 const less = require('gulp-less')
 const concat = require('gulp-concat')
 const cssmin = require('gulp-cssmin')
-const eslint = require('rollup-plugin-eslint')
+// const eslint = require('rollup-plugin-eslint')
 const postcss = require('gulp-postcss')
 const autoprefixer = require('autoprefixer')
 const cssgrace = require('cssgrace')
@@ -62,7 +62,7 @@ gulp.task('script', () => {
         entry: './src/js/index.js',
         plugins: [
             // 对原始文件启动 eslint 检查，配置参见 ./.eslintrc.json
-            eslint(),
+            // eslint(),
             resolve(),
             babel({
                 exclude: 'node_modules/**' // only transpile our source code
